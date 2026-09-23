@@ -8,8 +8,8 @@ only the class presets are reused from the original.
 ZaiiaPawn scores items against your own weight sets and shows the
 result directly in item tooltips and on the character / inspect sheet.
 
-ClassicAPI and SuperWoW are recommended for the full feature set,
-but the addon works without them (see "Optional dependencies" below).
+ClassicAPI is recommended for the full feature set, but the addon
+works without it (see "Optional dependencies" below).
 
 
 ## Features
@@ -80,19 +80,13 @@ Buttons on the right are grouped into Set, Global and Options.
 
 ## Optional dependencies
 
-ClassicAPI and SuperWoW are auto-detected. Installing them is
-recommended — without them the addon still runs, but some features
-degrade.
+ClassicAPI is auto-detected. Installing it is recommended — without
+it the addon still runs, but some filter types are skipped.
 
-- [ClassicAPI](https://github.com/brues-code/ClassicAPI) — numeric classID / subclassID for items.
-  Without it: exact byClassSubclass equipment filters (Wands, Maces,
-  Shields, Librams, Idols, Totems) are silently skipped. byEquipLoc
-  filters (Two-Hand, Ranged, Holdable, Off-hand) still work.
-
-- [SuperWoW](https://github.com/balakethelock/SuperWoW) — better mouseover resolution.
-  Without it: tooltip scoring for other players is limited to your
-  party members 1-4, your target and yourself. Raid members are not
-  detected.
+[ClassicAPI](https://github.com/brues-code/ClassicAPI) — numeric classID / subclassID for items.
+Without it: exact byClassSubclass equipment filters (Wands, Maces,
+Shields, Librams, Idols, Totems) are silently skipped. byEquipLoc
+filters (Two-Hand, Ranged, Holdable, Off-hand) still work.
 
 
 Credits
