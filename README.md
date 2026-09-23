@@ -84,12 +84,12 @@ ClassicAPI and SuperWoW are auto-detected. Installing them is
 recommended — without them the addon still runs, but some features
 degrade.
 
-- ClassicAPI — numeric classID / subclassID for items.
+- [ClassicAPI](https://github.com/brues-code/ClassicAPI) — numeric classID / subclassID for items.
   Without it: exact byClassSubclass equipment filters (Wands, Maces,
   Shields, Librams, Idols, Totems) are silently skipped. byEquipLoc
   filters (Two-Hand, Ranged, Holdable, Off-hand) still work.
 
-- SuperWoW — better mouseover resolution.
+- [SuperWoW](https://github.com/balakethelock/SuperWoW) — better mouseover resolution.
   Without it: tooltip scoring for other players is limited to your
   party members 1-4, your target and yourself. Raid members are not
   detected.
@@ -97,7 +97,7 @@ degrade.
 
 Credits
 
-- Original OctoPawn by iGreed (https://github.com/iGreed1993/OctoPawn),
+- Original [OctoPawn by iGreed](https://github.com/iGreed1993/OctoPawn),
   reused class weight presets and the equipment filter format
   as a starting point.
 
