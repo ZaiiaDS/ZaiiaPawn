@@ -3,7 +3,7 @@ ZaiiaPawn
 
 Multi-set item scoring for Turtle-like servers.
 
-Inspired by and based on OctoPawn — most of the code was rewritten,
+Inspired by and based on OctoPawn(https://github.com/iGreed1993/OctoPawn) — most of the code was rewritten,
 only the class presets are reused from the original.
 
 ZaiiaPawn scores items against your own weight sets and shows the
