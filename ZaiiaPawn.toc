@@ -1,0 +1,54 @@
+## Interface: 11200
+## Title: |cffffd700Z|raiia|cffffd700P|rawn by |cffffd700Zaiia|r
+## Notes: Multi-set item scoring.
+## Author: Zaiia (based on OctoPawn by iGreed)
+## Version: 2.7.0
+## SavedVariablesPerCharacter: ZaiiaPawnDB
+
+# --- Core constants first (CLS_*, WSUB.*, ASUB.*, PAWN_STAT_MAP) ---
+Core\Utils.lua
+Core\ClassRoles.lua
+
+# --- Defaults helpers ---
+Defaults\OctoPawn_Helpers.lua
+
+# --- ZaiiaPawn presets ---
+Defaults\ZaiiaPawn_Druid.lua
+Defaults\ZaiiaPawn_Hunter.lua
+Defaults\ZaiiaPawn_Paladin.lua
+
+# --- OctoPawn defaults (need Core\Utils.lua already loaded) ---
+Defaults\OctoPawn_Warrior.lua
+Defaults\OctoPawn_Paladin.lua
+Defaults\OctoPawn_Hunter.lua
+Defaults\OctoPawn_Rogue.lua
+Defaults\OctoPawn_Priest.lua
+Defaults\OctoPawn_Shaman.lua
+Defaults\OctoPawn_Mage.lua
+Defaults\OctoPawn_Warlock.lua
+Defaults\OctoPawn_Druid.lua
+
+# --- Libraries ---
+Libs\ClassicAPI.lua
+Libs\SuperWoW.lua
+
+# --- Core (rest) ---
+Core\Sets.lua
+Core\Init.lua
+
+# --- Scoring ---
+Scoring\Parser.lua
+Scoring\Weights.lua
+Scoring\Engine.lua
+
+# --- Tooltip ---
+Tooltip\Compare.lua
+Tooltip\MultiSpec.lua
+Tooltip\Handler.lua
+
+# --- UI ---
+UI\Config.lua
+UI\Advanced.lua
+UI\Share.lua
+UI\Paperdoll.lua
+UI\Pdmo.lua

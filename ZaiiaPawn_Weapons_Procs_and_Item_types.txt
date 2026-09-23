@@ -1,0 +1,385 @@
+========================================================
+ ЧАСТЬ 1 / PART 1 - РУССКИЙ
+========================================================
+
+========================================================
+ ZAIIAPAWN - ОРУЖИЕ, ПРОКИ И ТИПЫ ПРЕДМЕТОВ
+========================================================
+ Как работают псевдо-статы ZaiiaPawn на Turtle 1.18.1.
+========================================================
+
+--------------------------------------------------------
+ОБЩЕЕ
+--------------------------------------------------------
+
+Псевдо-статы - обычные строки в окне весов.  Настройка
+как у любого стата: положительно, отрицательно, ноль.
+Вес по умолчанию 0, поэтому без ручной настройки ничто
+на score не влияет.
+
+Если стат не задан в весах набора, его вес 0.
+
+--------------------------------------------------------
+WEAPON DAMAGE - урон за удар
+--------------------------------------------------------
+
+Средний урон за удар = (min + max) / 2.  Пример:
+"46 - 87 Damage" даёт 66.5.
+
+Диапазон: 5 .. 200.
+Положительный вес - больше разовый урон лучше.
+Применение: Arms Warrior, Retribution Paladin,
+Enhancement Shaman, Feral Bear.
+
+--------------------------------------------------------
+WEAPON SPEED - длительность замаха
+--------------------------------------------------------
+
+Секунды за один автоудар.  Пример: "Speed 2.60" даёт
+2.60.  Больше число = МЕДЛЕННЕЕ оружие.
+
+Диапазон: 1.3 .. 4.0.
+Положительный вес - медленное лучше (Ret, Arms, Enh).
+Отрицательный - быстрое лучше (Fury, Rogue, танки).
+
+--------------------------------------------------------
+DPS
+--------------------------------------------------------
+
+Урон в секунду прямо из тултипа.  Для melee-спеков
+умеренный положительный вес (1.0..2.0).  Для кастеров
+и друидов - 0, иначе строка DPS ванда искажает score.
+
+--------------------------------------------------------
+WEAPON TYPE *
+--------------------------------------------------------
+
+Пять флагов (0 или 1), обозначающих слот оружия:
+
+  WEAPON TYPE 1H / 2H / SHIELD / OFFHAND / RANGED
+
+Это мягкие маркеры, не блокировка.  Используйте их для
+предпочтений (Ret: 2H = 100, 1H = -30), а notUsable -
+для физических запретов (танк не может 2H).
+
+--------------------------------------------------------
+PROCS - количество проков
+--------------------------------------------------------
+
+Количество строк "Chance on hit".  Частота прока
+клиенту недоступна, поэтому DPS проков не считается.
+Небольшой положительный вес (+5..+15) даёт предметам
+с проками умеренное преимущество.
+
+--------------------------------------------------------
+PROC DAMAGE - сила прока
+--------------------------------------------------------
+
+Сумма среднего урона уроновых проков.  Диапазон
+"75 to 100" -> +87.5, одиночное "Deals 50" -> +50.
+Прок без урона (стан, бафф) увеличивает PROCS, но
+PROC DAMAGE не трогает.
+
+--------------------------------------------------------
+PROC AOE - прок по площади
+--------------------------------------------------------
+
+Количество проков, бьющих по нескольким целям.
+Определяется по "all enemies", "nearby enemies",
+"in front of you", "all targets", "up to N enemies",
+"enemies within".
+
+Ценно для танков и cleave-ДПС (треат, выживание).
+
+--------------------------------------------------------
+PROC HEAL - лечащий прок
+--------------------------------------------------------
+
+Проки без урона, лечащие игрока.  Определяется по
+"heals you", "heals the", "restores N health".
+Ценно для хилеров и танков.
+
+--------------------------------------------------------
+СИТУАТИВНЫЕ БОНУСЫ
+--------------------------------------------------------
+
+Строки с условием ("when fighting Beasts", "vs Undead",
+"versus Demons", "against Undead") обрабатываются так:
+
+  Правило 1.  Undead-бонусы идут в отдельные статы
+              ATTACK POWER UNDEAD и SPELL DAMAGE UNDEAD.
+              По умолчанию вес 0, включаются вручную
+              под контент с нежитью.
+
+  Правило 2.  Все прочие условные бонусы отбрасываются.
+              "+30 AP when fighting Beasts" НЕ добавляет
+              30 к ATTACK POWER.
+
+Зачем: бонус против зверей бесполезен против нежити.
+Учёт как универсального искажал бы сравнение.
+
+--------------------------------------------------------
+РЕКОМЕНДАЦИИ ПО КЛАССАМ (кратко)
+--------------------------------------------------------
+
+Паладин
+  Prot:       WEAPON SPEED -5, 2H -1000, 1H 50, Shield 100
+  Prot AOE:   WEAPON SPEED -15, как Prot
+  Holy:       WEAPON DAMAGE/SPEED/DPS 0, Shield 20
+  Ret:        WEAPON DAMAGE 2.0, SPEED 20, DPS 0.5,
+              2H 100, 1H -30
+  Spell Power: как Ret, но WEAPON SPEED 25, SP-билд
+
+Воин
+  Arms:     DAMAGE 2.0, SPEED 20, DPS 1.0, 2H 100, 1H -50
+  Fury:     DAMAGE 1.0, SPEED -10, DPS 1.5, 1H 30, 2H 30
+  Prot:     DAMAGE 0.5, SPEED -5, 2H -50, 1H 20, Shield 50
+
+Охотник
+  Ranged:   DPS 1.0, RANGED 100
+  Melee:    DAMAGE 2.0, SPEED 20, DPS 0.5, 2H 100, RANGED 30
+
+Разбойник
+  DAMAGE 0, SPEED -20, DPS 5, 1H 50, OFFHAND 30
+
+Шаман
+  Caster:   DAMAGE/SPEED/DPS 0, 1H 30, Shield 50
+  Enh:      DAMAGE 1.5, SPEED 15, DPS 1.0, 2H 80, 1H 30
+  EnhTank:  DAMAGE 0.5, SPEED -5, 2H -1000, Shield 100
+
+Кастеры (Mage / Warlock / Priest)
+  DAMAGE/SPEED/DPS 0 (оружие - статстик).
+
+Друид
+  Feral:    DAMAGE/SPEED/DPS 0, FERAL ATTACK POWER 3.0
+  Caster:   DAMAGE/SPEED/DPS 0
+
+--------------------------------------------------------
+МАСШТАБ ВЕСОВ
+--------------------------------------------------------
+
+Веса не нормализованы.  Вес 10 на SPEED и вес 10 на
+STAMINA не означают равный вклад: диапазон значений
+стата определяет вклад.
+
+Примерные диапазоны:
+
+  WEAPON DAMAGE    5 .. 200
+  WEAPON SPEED     1.3 .. 4.0
+  DPS              0 .. 100
+  WEAPON TYPE *    0 или 1
+  PROCS            0 .. 3
+  PROC DAMAGE      0 .. 500
+  PROC AOE         0 .. 3
+  PROC HEAL        0 .. 3
+
+Если хотите, чтобы SPEED и DAMAGE имели сопоставимый
+вклад, вес SPEED должен быть в 30-50 раз выше.
+
+--------------------------------------------------------
+ЧТО НЕ ПОКРЫТО
+--------------------------------------------------------
+
+- Частота прока (только на сервере).
+- Зачарования оружия (Crusader, масла).
+- Временные баффы.
+- Бонусы комплектов.
+- Эффекты "Use" (восстановление здоровья и т.п.).
+- Проки без ключевых слов урона, AOE или хила
+  (учитываются только в PROCS).
+
+========================================================
+ КОНЕЦ РУССКОЙ ЧАСТИ
+========================================================
+
+
+========================================================
+ ЧАСТЬ 2 / PART 2 - ENGLISH
+========================================================
+
+========================================================
+ ZAIIAPAWN - WEAPONS, PROCS AND ITEM TYPES
+========================================================
+ How ZaiiaPawn pseudo-stats work on Turtle 1.18.1.
+========================================================
+
+--------------------------------------------------------
+OVERVIEW
+--------------------------------------------------------
+
+Pseudo-stats are normal entries in the Weights tab.
+Configure like any other stat: positive, negative, zero.
+Default weight is 0, so nothing affects the score until
+you set a value.
+
+If a stat is not set in the set's weights, its weight is 0.
+
+--------------------------------------------------------
+WEAPON DAMAGE - per-hit damage
+--------------------------------------------------------
+
+Average damage per swing = (min + max) / 2.  Example:
+"46 - 87 Damage" -> 66.5.
+
+Range: 5 .. 200.
+Positive weight: bigger per-hit damage is better.
+Users: Arms Warrior, Retribution Paladin, Enhancement
+Shaman, Feral Bear.
+
+--------------------------------------------------------
+WEAPON SPEED - swing duration
+--------------------------------------------------------
+
+Seconds per auto-attack.  Example: "Speed 2.60" -> 2.60.
+Bigger number = SLOWER weapon.
+
+Range: 1.3 .. 4.0.
+Positive: slow preferred (Ret, Arms, Enh).
+Negative: fast preferred (Fury, Rogue, tanks).
+
+--------------------------------------------------------
+DPS
+--------------------------------------------------------
+
+Damage per second, read from the tooltip.  Melee specs
+want a moderate positive weight (1.0..2.0).  Casters and
+druids set 0, otherwise a wand's DPS line skews score.
+
+--------------------------------------------------------
+WEAPON TYPE *
+--------------------------------------------------------
+
+Five 0/1 flags marking the weapon slot:
+
+  WEAPON TYPE 1H / 2H / SHIELD / OFFHAND / RANGED
+
+These are soft markers, not blocks.  Use them for
+preferences (Ret: 2H = 100, 1H = -30).  Use notUsable
+for physical restrictions (tank cannot 2H).
+
+--------------------------------------------------------
+PROCS - proc count
+--------------------------------------------------------
+
+Count of "Chance on hit" lines.  Proc rate is not
+available to the client, so proc DPS is not computed.
+Small positive weight (+5..+15) gives proc items a
+modest edge.
+
+--------------------------------------------------------
+PROC DAMAGE - proc strength
+--------------------------------------------------------
+
+Sum of average damage across damage procs.  Range
+"75 to 100" -> +87.5, single "Deals 50" -> +50.
+Non-damage procs (stun, buff) increment PROCS but
+not PROC DAMAGE.
+
+--------------------------------------------------------
+PROC AOE - area procs
+--------------------------------------------------------
+
+Count of procs hitting multiple targets.  Detected by
+"all enemies", "nearby enemies", "in front of you",
+"all targets", "up to N enemies", "enemies within".
+
+Valuable for tanks and cleave DPS (threat, survival).
+
+--------------------------------------------------------
+PROC HEAL - healing procs
+--------------------------------------------------------
+
+Non-damage procs that heal the player.  Detected by
+"heals you", "heals the", "restores N health".
+Valuable for healers and tanks.
+
+--------------------------------------------------------
+SITUATIONAL BONUSES
+--------------------------------------------------------
+
+Conditional lines ("when fighting Beasts", "vs Undead",
+"versus Demons", "against Undead") are handled as:
+
+  Rule 1.  Undead bonuses go to dedicated stats:
+           ATTACK POWER UNDEAD and SPELL DAMAGE UNDEAD.
+           Default weight 0, opt in for undead content.
+
+  Rule 2.  All other conditional bonuses are dropped.
+           "+30 AP when fighting Beasts" does NOT add 30
+           to ATTACK POWER.
+
+Rationale: a bonus vs Beasts is worthless vs Undead.
+Counting it as universal would distort comparisons.
+
+--------------------------------------------------------
+CLASS RECOMMENDATIONS (short)
+--------------------------------------------------------
+
+Paladin
+  Prot:       WEAPON SPEED -5, 2H -1000, 1H 50, Shield 100
+  Prot AOE:   WEAPON SPEED -15, same as Prot
+  Holy:       DAMAGE/SPEED/DPS 0, Shield 20
+  Ret:        DAMAGE 2.0, SPEED 20, DPS 0.5, 2H 100, 1H -30
+  Spell Power: same as Ret, WEAPON SPEED 25
+
+Warrior
+  Arms:   DAMAGE 2.0, SPEED 20, DPS 1.0, 2H 100, 1H -50
+  Fury:   DAMAGE 1.0, SPEED -10, DPS 1.5, 1H 30, 2H 30
+  Prot:   DAMAGE 0.5, SPEED -5, 2H -50, 1H 20, Shield 50
+
+Hunter
+  Ranged: DPS 1.0, RANGED 100
+  Melee:  DAMAGE 2.0, SPEED 20, DPS 0.5, 2H 100, RANGED 30
+
+Rogue
+  DAMAGE 0, SPEED -20, DPS 5, 1H 50, OFFHAND 30
+
+Shaman
+  Caster:   DAMAGE/SPEED/DPS 0, 1H 30, Shield 50
+  Enh:      DAMAGE 1.5, SPEED 15, DPS 1.0, 2H 80, 1H 30
+  EnhTank:  DAMAGE 0.5, SPEED -5, 2H -1000, Shield 100
+
+Casters (Mage / Warlock / Priest)
+  DAMAGE/SPEED/DPS 0 (weapon is a statstick).
+
+Druid
+  Feral:   DAMAGE/SPEED/DPS 0, FERAL ATTACK POWER 3.0
+  Caster:  DAMAGE/SPEED/DPS 0
+
+--------------------------------------------------------
+WEIGHT SCALE
+--------------------------------------------------------
+
+Weights are not normalized.  A weight of 10 on SPEED and
+10 on STAMINA do not contribute equally; the underlying
+stat's value range determines the contribution.
+
+Approximate ranges:
+
+  WEAPON DAMAGE    5 .. 200
+  WEAPON SPEED     1.3 .. 4.0
+  DPS              0 .. 100
+  WEAPON TYPE *    0 or 1
+  PROCS            0 .. 3
+  PROC DAMAGE      0 .. 500
+  PROC AOE         0 .. 3
+  PROC HEAL        0 .. 3
+
+If you want SPEED and DAMAGE to weigh comparably, set
+SPEED weight roughly 30-50x higher.
+
+--------------------------------------------------------
+NOT COVERED
+--------------------------------------------------------
+
+- Proc rate (server-side only).
+- Weapon enchantments (Crusader, oils).
+- Temporary buffs.
+- Set bonuses.
+- "Use" effects (restore health, etc.).
+- Procs without damage, AOE, or heal keywords
+  (counted only in PROCS).
+
+========================================================
+ END OF FILE
+========================================================

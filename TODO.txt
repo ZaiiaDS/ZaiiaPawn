@@ -1,0 +1,6 @@
+
+ПРОВЕРИТЬ
+
+Веса WEAPON TYPE SHIELD = 40 для Melee Hunter — если Improved Primal Aspects даёт слишком много sustain, можно поднять до 60.
+ARMOR PENETRATION для FeralCat — если на Turtle WoW кап Armor Pen отличается от классики, скорректировать.
+SPELL HIT = 2.6 для Balance — проверить, есть ли на Turtle WoW дополнительный spell hit cap для Moonkin (обычно 17% в рейде).
