@@ -2,7 +2,7 @@
 
 Multi-set item scoring for Turtle-like servers.
 
-Inspired by and based on OctoPawn (https://github.com/iGreed1993/OctoPawn) — most of the code was rewritten,
+Inspired by and based on OctoPawn, most of the code was rewritten,
 only the class presets are reused from the original.
 
 ZaiiaPawn scores items against your own weight sets and shows the
@@ -97,8 +97,9 @@ degrade.
 
 Credits
 
-- Original OctoPawn by iGreed — reused class weight presets and the
-  equipment filter format as a starting point.
+- Original OctoPawn by iGreed (https://github.com/iGreed1993/OctoPawn),
+  reused class weight presets and the equipment filter format
+  as a starting point.
 
 - ZaiiaPawn — rewritten and extended:  new tooltip  engine,
   multi-set active system, soft caps, equipment filter
