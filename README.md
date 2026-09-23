@@ -1,5 +1,4 @@
 # ZaiiaPawn
-=========
 
 Multi-set item scoring for Turtle-like servers.
 
@@ -13,8 +12,7 @@ ClassicAPI and SuperWoW are recommended for the full feature set,
 but the addon works without them (see "Optional dependencies" below).
 
 
-Features
---------
+## Features
 
 - Multiple weight sets.
   Define as many sets as you want (Holy, Protection, Retribution,
@@ -54,8 +52,8 @@ Features
   preference, independent from the hard equipment filter.
 
 
-Interface
----------
+## Interface
+<img src="https://github.com/user-attachments/assets/3dd08e51-6943-40c9-978e-f3e90797b29a" />
 
 Open the main window with /zp or the minimap icon.
 
@@ -71,8 +69,7 @@ Open the main window with /zp or the minimap icon.
 Buttons on the right are grouped into Set, Global and Options.
 
 
-Installation
-------------
+## Installation
 
 1. Download or clone this repository.
 2. Place the folder into Interface/AddOns/ZaiiaPawn/.
@@ -81,8 +78,7 @@ Installation
 3. Restart the client (or /reload).
 
 
-Optional dependencies
----------------------
+## Optional dependencies
 
 ClassicAPI and SuperWoW are auto-detected. Installing them is
 recommended — without them the addon still runs, but some features
@@ -100,7 +96,6 @@ degrade.
 
 
 Credits
--------
 
 - Original OctoPawn by iGreed — reused class weight presets and the
   equipment filter format as a starting point.
