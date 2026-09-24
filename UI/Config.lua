@@ -9,14 +9,14 @@ ZaiiaPawn = ZaiiaPawn or {}
 local configFrame, title
 local weightsFrame, weightsTitle
 local setListScroll, setListChild
-local setListRows = {}
+local setListPool = {}
 local cmpCheckbox
 local minimapBtn
 local pendingDeleteSet = nil
 local lastOpenedSet = nil
 
 local scrollFrame, scrollChild
-local editBoxes, orderedBoxes, createdFrames = {}, {}, {}
+local editBoxes, createdFrames = {}, {}
 
 local ShowSetFilterDialog
 local OpenWeightsWindow
@@ -223,10 +223,22 @@ local hint = configFrame:CreateFontString(nil, "OVERLAY",
 hint:SetPoint("TOP", title, "BOTTOM", 0, -2)
 hint:SetWidth(460)
 hint:SetJustifyH("LEFT")
-hint:SetText("|cFFAAAAAA"
+
+local hintText = "|cFFAAAAAA"
     .. "Left-click: edit weights.  Right-click: mark active (*).\n"
     .. "Checkbox: show in tooltips.  ^ / v: reorder sets."
-    .. "|r")
+    .. "|r"
+
+-- Noticeable warning if the ClassicAPI client mod is not present.
+-- Without it, byClassSubclass equipment filters are silently
+-- skipped (Maces, Wands, Shields, Librams, Idols, Totems).
+if not (type(C_Item) == "table" and C_Item.GetItemInfo) then
+    hintText = hintText
+        .. "\n|cFFFF6600ClassicAPI not detected - "
+        .. "some equipment filters disabled.|r"
+end
+
+hint:SetText(hintText)
 
 -------------------------------------------------
 -- Set list (left column, no scrollbar, mouse wheel)
@@ -568,19 +580,25 @@ end)
 -------------------------------------------------
 -- Set list rendering
 --
--- All rows use the same vertical step (30).  Name button is
--- 185x26, matching the right-column buttons exactly.
+-- Rows are pooled and reused across refreshes: a row is created
+-- only once, then only its name, position and checkbox state are
+-- updated.  This avoids leaking a fresh frame set on every
+-- RefreshSetList call (which fires on every checkbox toggle,
+-- right-click and reorder).
+--
+-- Handlers read `row.setName` instead of capturing the name in
+-- a closure, so a single row can be reassigned to different
+-- sets without rebinding scripts.
 -------------------------------------------------
-local function MakeSetRow(setName, yPos)
+local function CreateSetRow()
     local row = CreateFrame("Frame", nil, setListChild)
     row:SetWidth(268); row:SetHeight(30)
-    row:SetPoint("TOPLEFT", setListChild, "TOPLEFT", 0, yPos)
 
     local cb = CreateFrame("CheckButton", nil, row, "UICheckButtonTemplate")
     cb:SetWidth(24); cb:SetHeight(24); cb:SetPoint("LEFT", 0, 0)
-    cb:SetChecked(ZaiiaPawn.IsSetActive(setName) and 1 or 0)
     cb:SetScript("OnClick", function()
-        ZaiiaPawn.ToggleActiveSet(setName)
+        local name = row.setName
+        if name then ZaiiaPawn.ToggleActiveSet(name) end
     end)
     cb:SetScript("OnEnter", function()
         GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
@@ -592,30 +610,29 @@ local function MakeSetRow(setName, yPos)
     end)
     cb:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
-    local isCurrent = (setName == ZaiiaPawn.GetCurrentSet())
-    local suffix = isCurrent and "  *" or ""
-
     local btn = CreateFrame("Button", nil, row, "UIPanelButtonTemplate")
     btn:SetWidth(185); btn:SetHeight(26)
     btn:SetPoint("LEFT", cb, "RIGHT", 2, 0)
-    btn:SetText(setName .. suffix)
     btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
     btn:SetScript("OnClick", function()
+        local name = row.setName
+        if not name then return end
         if arg1 == "RightButton" then
-            ZaiiaPawn.SetCurrentSet(setName)
+            ZaiiaPawn.SetCurrentSet(name)
             ZaiiaPawn.RefreshSetList()
         else
-            if weightsFrame:IsShown() and lastOpenedSet == setName then
+            if weightsFrame:IsShown() and lastOpenedSet == name then
                 weightsFrame:Hide()
             else
-                ZaiiaPawn.SetCurrentSet(setName)
+                ZaiiaPawn.SetCurrentSet(name)
                 if OpenWeightsWindow then OpenWeightsWindow() end
             end
         end
     end)
     btn:SetScript("OnEnter", function()
+        local name = row.setName or "?"
         GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
-        GameTooltip:AddLine(setName, 1, 0.82, 0)
+        GameTooltip:AddLine(name, 1, 0.82, 0)
         GameTooltip:AddLine("Left-click: edit weights "
             .. "(click again to close)", 0.8, 0.8, 0.8)
         GameTooltip:AddLine("Right-click: mark as active (*)",
@@ -629,7 +646,8 @@ local function MakeSetRow(setName, yPos)
     upBtn:SetPoint("LEFT", btn, "RIGHT", 2, 0)
     upBtn:SetText("^")
     upBtn:SetScript("OnClick", function()
-        if ZaiiaPawn.MoveSetInOrder(setName, -1) then
+        local name = row.setName
+        if name and ZaiiaPawn.MoveSetInOrder(name, -1) then
             ZaiiaPawn.RefreshSetList()
         end
     end)
@@ -639,33 +657,52 @@ local function MakeSetRow(setName, yPos)
     dnBtn:SetPoint("LEFT", upBtn, "RIGHT", 2, 0)
     dnBtn:SetText("v")
     dnBtn:SetScript("OnClick", function()
-        if ZaiiaPawn.MoveSetInOrder(setName, 1) then
+        local name = row.setName
+        if name and ZaiiaPawn.MoveSetInOrder(name, 1) then
             ZaiiaPawn.RefreshSetList()
         end
     end)
 
-    table.insert(setListRows, row)
-    table.insert(setListRows, cb)
-    table.insert(setListRows, btn)
-    table.insert(setListRows, upBtn)
-    table.insert(setListRows, dnBtn)
+    row.cb = cb
+    row.btn = btn
+    row.upBtn = upBtn
+    row.dnBtn = dnBtn
+    return row
+end
+
+local function UpdateSetRow(row, setName, yPos)
+    row.setName = setName
+    row:SetPoint("TOPLEFT", setListChild, "TOPLEFT", 0, yPos)
+    row.cb:SetChecked(ZaiiaPawn.IsSetActive(setName) and 1 or 0)
+    local isCurrent = (setName == ZaiiaPawn.GetCurrentSet())
+    local suffix = isCurrent and "  *" or ""
+    row.btn:SetText(setName .. suffix)
 end
 
 function ZaiiaPawn.RefreshSetList()
-    local i
-    for i = 1, table.getn(setListRows) do
-        local r = setListRows[i]
-        if r then r:Hide(); r:SetParent(nil) end
-    end
-    setListRows = {}
-
     if not setListChild then return end
 
     local names = ZaiiaPawn.GetAllSetNames()
+    local count = table.getn(names)
+
+    -- Grow pool if there are more sets than pooled rows.
+    while table.getn(setListPool) < count do
+        table.insert(setListPool, CreateSetRow())
+    end
+
+    -- Update visible rows.
     local y = -2
-    for i = 1, table.getn(names) do
-        MakeSetRow(names[i], y)
+    local i
+    for i = 1, count do
+        local row = setListPool[i]
+        row:Show()
+        UpdateSetRow(row, names[i], y)
         y = y - rowStep
+    end
+
+    -- Hide leftover rows.
+    for i = count + 1, table.getn(setListPool) do
+        setListPool[i]:Hide()
     end
 
     setListChild:SetHeight(math.max(200, -y + 4))
@@ -680,7 +717,7 @@ function ZaiiaPawn_WipeConfigUI()
         local f = createdFrames[i]
         if f then f:Hide(); f:SetParent(nil) end
     end
-    createdFrames = {}; editBoxes = {}; orderedBoxes = {}
+    createdFrames = {}; editBoxes = {}
     if scrollChild then
         scrollChild:Hide(); scrollChild:SetParent(nil)
     end
@@ -797,7 +834,6 @@ function BuildEditBoxes()
         label:SetText(s)
 
         editBoxes[s] = box
-        table.insert(orderedBoxes, box)
         table.insert(createdFrames, box)
         table.insert(createdFrames, label)
 
