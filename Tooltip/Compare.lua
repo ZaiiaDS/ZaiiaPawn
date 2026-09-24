@@ -3,23 +3,11 @@
 -------------------------------------------------
 ZaiiaPawn = ZaiiaPawn or {}
 
+-- Slot lookup by tooltip text.  The map is populated from
+-- ENGLISH_FALLBACK only, since INVTYPE_* constants are not
+-- what the tooltip displays (the tooltip shows "Head",
+-- "Neck", etc., not "INVTYPE_HEAD").
 local INV_SLOT_MAP = {}
-local function AddSlot(key, slots)
-    if key then INV_SLOT_MAP[key] = slots end
-end
-AddSlot(INVTYPE_HEAD, {1}); AddSlot(INVTYPE_NECK, {2})
-AddSlot(INVTYPE_SHOULDER, {3}); AddSlot(INVTYPE_BODY, {4})
-AddSlot(INVTYPE_CHEST, {5}); AddSlot(INVTYPE_ROBE, {5})
-AddSlot(INVTYPE_WAIST, {6}); AddSlot(INVTYPE_LEGS, {7})
-AddSlot(INVTYPE_FEET, {8}); AddSlot(INVTYPE_WRIST, {9})
-AddSlot(INVTYPE_HAND, {10}); AddSlot(INVTYPE_FINGER, {11, 12})
-AddSlot(INVTYPE_TRINKET, {13, 14}); AddSlot(INVTYPE_CLOAK, {15})
-AddSlot(INVTYPE_WEAPON, {16, 17}); AddSlot(INVTYPE_WEAPONMAINHAND, {16})
-AddSlot(INVTYPE_WEAPONOFFHAND, {17}); AddSlot(INVTYPE_2HWEAPON, {16, 17})
-AddSlot(INVTYPE_SHIELD, {17}); AddSlot(INVTYPE_HOLDABLE, {17})
-AddSlot(INVTYPE_RANGED, {18}); AddSlot(INVTYPE_RANGEDRIGHT, {18})
-AddSlot(INVTYPE_THROWN, {18}); AddSlot(INVTYPE_RELIC, {18})
-AddSlot(INVTYPE_TABARD, {19})
 
 local ENGLISH_FALLBACK = {
     ["Head"]={1},["Neck"]={2},["Shoulder"]={3},["Shirt"]={4},["Chest"]={5},
@@ -30,7 +18,7 @@ local ENGLISH_FALLBACK = {
     ["Gun"]={18},["Bow"]={18},["Crossbow"]={18},["Relic"]={18},["Tabard"]={19},
 }
 for k, v in pairs(ENGLISH_FALLBACK) do
-    if not INV_SLOT_MAP[k] then INV_SLOT_MAP[k] = v end
+    INV_SLOT_MAP[k] = v
 end
 
 local SHORT_SLOT_LABEL = {

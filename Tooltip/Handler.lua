@@ -4,7 +4,6 @@
 ZaiiaPawn = ZaiiaPawn or {}
 
 local registeredTooltips = {}
-local lastScoredTooltip = nil
 
 -- Adds multi-set lines if any set produces output.
 -- Sets zpScored=true only on success (so OnShow-retry can fire again).
@@ -15,35 +14,7 @@ function ZaiiaPawn.AddScoreToTooltip(tooltip)
         return -- will retry via delay
     end
     tooltip.zpScored = true
-    lastScoredTooltip = tooltip
     tooltip:Show()
-end
-
-function ZaiiaPawn.GetActiveItemTooltip()
-    if lastScoredTooltip and lastScoredTooltip:IsVisible() then
-        local totals = ZaiiaPawn.GetTooltipTotals(lastScoredTooltip)
-        if next(totals) then return lastScoredTooltip end
-    end
-    local names = {
-        "GameTooltip", "ItemRefTooltip",
-        "AtlasCFMLootTooltip", "AtlasCFMLootTooltip2",
-        "AtlasLootTooltip", "AtlasLootTooltip2",
-        "ShoppingTooltip1", "ShoppingTooltip2",
-        "ComparisonTooltip1", "ComparisonTooltip2",
-        "AtlasTooltip", "LinkWrangler",
-    }
-    local i
-    for i = 1, table.getn(names) do
-        local tip = getglobal(names[i])
-        if tip and tip.IsVisible and tip:IsVisible() and tip.NumLines then
-            local tipName = tip:GetName()
-            if tipName ~= "ZaiiaPawnScanTooltip" then
-                local totals = ZaiiaPawn.GetTooltipTotals(tip)
-                if next(totals) then return tip end
-            end
-        end
-    end
-    return nil
 end
 
 -------------------------------------------------
@@ -114,7 +85,7 @@ local function RegisterTooltip(tip)
     tip:SetScript("OnHide", function()
         this.zpScored = nil
         this.zpTotals = nil
-        if lastScoredTooltip == this then lastScoredTooltip = nil end
+        this.itemLink = nil
         if oldHide then oldHide() end
     end)
 end
