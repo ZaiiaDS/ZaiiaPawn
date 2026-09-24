@@ -14,7 +14,6 @@ local function EnsureSetsTable()
     if not ZaiiaPawnDB then ZaiiaPawnDB = {} end
     if type(ZaiiaPawnDB.sets) ~= "table" then ZaiiaPawnDB.sets = {} end
     if type(ZaiiaPawnDB.activeSets) ~= "table" then ZaiiaPawnDB.activeSets = {} end
-    if type(ZaiiaPawnDB.inspectSet) ~= "table" then ZaiiaPawnDB.inspectSet = {} end
     if type(ZaiiaPawnDB.setOrder) ~= "table" then ZaiiaPawnDB.setOrder = {} end
 end
 
@@ -221,16 +220,6 @@ function ZaiiaPawn.RenameSet(oldName, newName)
         if order[i] == oldName then order[i] = newName; break end
     end
 
-    -- Update any per-class inspect set that pointed to oldName.
-    if type(ZaiiaPawnDB.inspectSet) == "table" then
-        local cls
-        for cls, setName in pairs(ZaiiaPawnDB.inspectSet) do
-            if setName == oldName then
-                ZaiiaPawnDB.inspectSet[cls] = newName
-            end
-        end
-    end
-
     if ZaiiaPawn_ClearScoreCache then ZaiiaPawn_ClearScoreCache() end
     return true
 end
@@ -315,19 +304,4 @@ function ZaiiaPawn.SeedSetsFromDefaults(class)
             ZaiiaPawnDB.activeSets = { names[1] }
         end
     end
-end
-
--------------------------------------------------
--- Inspect (per-class)
--------------------------------------------------
-function ZaiiaPawn.GetInspectSet(class)
-    if not class then return nil end
-    EnsureSetsTable()
-    return ZaiiaPawnDB.inspectSet[class]
-end
-
-function ZaiiaPawn.SetInspectSet(class, name)
-    if not class then return end
-    EnsureSetsTable()
-    ZaiiaPawnDB.inspectSet[class] = name
 end

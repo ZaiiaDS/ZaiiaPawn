@@ -8,7 +8,6 @@ local function EnsureDB()
     if type(ZaiiaPawnDB) ~= "table" then ZaiiaPawnDB = {} end
     if type(ZaiiaPawnDB.sets) ~= "table" then ZaiiaPawnDB.sets = {} end
     if type(ZaiiaPawnDB.activeSets) ~= "table" then ZaiiaPawnDB.activeSets = {} end
-    if type(ZaiiaPawnDB.inspectSet) ~= "table" then ZaiiaPawnDB.inspectSet = {} end
     if type(ZaiiaPawnDB.dr) ~= "table" then ZaiiaPawnDB.dr = {} end
     if ZaiiaPawnDB.compareEnabled == nil then ZaiiaPawnDB.compareEnabled = true end
     -- seeded: has the initial default-set creation already run?
