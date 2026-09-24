@@ -28,10 +28,6 @@ Defaults\OctoPawn_Mage.lua
 Defaults\OctoPawn_Warlock.lua
 Defaults\OctoPawn_Druid.lua
 
-# --- Libraries ---
-Libs\ClassicAPI.lua
-Libs\SuperWoW.lua
-
 # --- Core (rest) ---
 Core\Sets.lua
 Core\Init.lua
@@ -50,5 +46,3 @@ Tooltip\Handler.lua
 UI\Config.lua
 UI\Advanced.lua
 UI\Share.lua
-UI\Paperdoll.lua
-UI\Pdmo.lua
