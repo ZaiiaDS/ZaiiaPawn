@@ -161,31 +161,6 @@ function ZaiiaPawn.GetScanTooltip()
     return scanTooltip
 end
 
-function ZaiiaPawn.ScoreUnitEquipped(unit, weights, roleName, notUsable)
-    if not unit or not UnitExists(unit) then return 0 end
-    local tip = ZaiiaPawn.GetScanTooltip()
-    local total = 0
-    local slot
-    for slot = 1, 19 do
-        local link = GetInventoryItemLink(unit, slot)
-        if link then
-            if not ZaiiaPawn.IsEquipLocBlocked(link, notUsable) then
-                tip:SetOwner(UIParent, "ANCHOR_NONE")
-                tip:ClearLines()
-                tip.zpTotals = nil
-                tip.zpScored = nil
-                tip:SetInventoryItem(unit, slot)
-                tip:Show()
-                tip.itemLink = link
-                local score = ZaiiaPawn.ScoreTooltip(tip, weights, roleName)
-                tip:Hide()
-                if score then total = total + score end
-            end
-        end
-    end
-    return total
-end
-
 local ef = CreateFrame("Frame")
 ef:RegisterEvent("UNIT_INVENTORY_CHANGED")
 ef:SetScript("OnEvent", function()
