@@ -112,7 +112,17 @@ function ZaiiaPawn.ScoreTooltip(tooltip, weights, roleName)
         weights = ZaiiaPawn.GetDefaultWeights()
     end
 
+    -- Prefer the cached link (set by our Set* hooks on
+    -- GameTooltip).  Fall back to GetItem() so that other
+    -- tooltips (ShoppingTooltip1/2, ItemRefTooltip, ...) share
+    -- the same cache entry.  Without this, the same item would
+    -- show a different score on ShoppingTooltip vs GameTooltip.
     local itemLink = tooltip.itemLink
+    if not itemLink and tooltip.GetItem then
+        local _, l = tooltip:GetItem()
+        itemLink = l
+    end
+
     local key
     if itemLink then
         key = CacheKey(itemLink, roleName)

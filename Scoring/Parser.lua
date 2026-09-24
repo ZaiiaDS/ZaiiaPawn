@@ -322,7 +322,17 @@ local function ExtractProc(upper, totals)
 end
 
 local function DetectWeaponType(tooltip, totals)
+    -- Prefer the cached link set by the Set* hooks in
+    -- Handler.lua.  Fall back to the tooltip's own GetItem()
+    -- which works for any tooltip instance (ShoppingTooltip,
+    -- ItemRefTooltip, Atlas tooltips, ...) whose Set* method
+    -- we do not hook.  Without this fallback, those tooltips
+    -- would parse the same item without WEAPON TYPE bonuses.
     local link = tooltip.itemLink
+    if not link and tooltip.GetItem then
+        local _, l = tooltip:GetItem()
+        link = l
+    end
     if not link then return end
 
     local _, _, idStr = string.find(link, "item:(%d+)")
