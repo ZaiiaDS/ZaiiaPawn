@@ -4,6 +4,7 @@
 ZaiiaPawn = ZaiiaPawn or {}
 
 ZaiiaPawn.StatPatterns = {
+    { pattern = "%+%d+ DAMAGE%)?%s*$", stat = "WEAPON DAMAGE" },
     { pattern = "DAMAGE AND HEALING DONE BY MAGICAL SPELLS", stat = "SPELL POWER" },
     { pattern = "DAMAGE AND HEALING DONE BY SPELLS",         stat = "SPELL POWER" },
     { pattern = "DAMAGE DONE BY SHADOW SPELLS",  stat = "SHADOW DAMAGE" },
