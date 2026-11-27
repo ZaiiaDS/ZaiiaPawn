@@ -39,6 +39,8 @@ function ZaiiaPawn.AddMultiRoleLines(tooltip)
     end
     if not itemLink then return false end
 
+    if not ZaiiaPawn.IsItemEquippable(itemLink) then return false end
+
     local totals = ZaiiaPawn.GetTooltipTotals(tooltip)
     if not next(totals) then return false end
 
