@@ -1,8 +1,8 @@
 # ZaiiaPawn
 
-**Версия 2.8.8** — скоринг предметов по нескольким наборам весов для Turtle-подобных серверов WoW 1.12.
+Оценка (скоринг) предметов по нескольким наборам весов для Turtle-like серверов.
 
-ZaiiaPawn оценивает предметы по вашим собственным наборам весов и показывает результат в тултипах предметов, на листе персонажа и в окне осмотра. Встроенный модуль рекомендаций подбирает лучшую экипировку по слотам из встроенной базы предметов.
+ZaiiaPawn оценивает предметы по вашим собственным наборам весов и показывает результат в тултипах предметов. Встроенный модуль рекомендаций подбирает лучшую экипировку по слотам из встроенной базы предметов.
 
 Основан на OctoPawn: от оригинала взяты классовые пресеты и формат фильтров экипировки, остальной код переписан.
 
@@ -59,9 +59,9 @@ ZaiiaPawn оценивает предметы по вашим собственн
 
 # ZaiiaPawn (English)
 
-**Version 2.8.8** — multi-set item scoring for Turtle-like WoW 1.12 servers.
+Multi-set item scoring for Turtle-like servers.
 
-ZaiiaPawn scores items against your own weight sets and shows the result in item tooltips, on the character sheet and in the inspect window. A built-in recommender module picks the best available gear per slot from an embedded item database.
+ZaiiaPawn scores items against your own weight sets and shows the result in item tooltips. A built-in recommender module picks the best available gear per slot from an embedded item database.
 
 Based on OctoPawn: class weight presets and the equipment filter format are reused, most of the code is rewritten.
 
