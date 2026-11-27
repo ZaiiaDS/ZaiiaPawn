@@ -2,30 +2,33 @@
 -- ZaiiaPawn Defaults/ZaiiaPawn_Hunter.lua
 -- Hunter presets (Turtle WoW 1.18.1).
 --
--- Turtle-specific mechanics:
---   * Aspect of the Wolf = melee attack power (7 ranks
---     to level 60); does NOT block ranged abilities.
---   * Improved Predator Aspects: 1..5% chance to boost
---     melee attack speed by 30% for 12 sec while
---     Aspect of the Wolf is active.
---   * Mongoose Bite: 60% weapon damage + flat damage,
---     resets auto-attack swing timer.  Weapon damage
---     is therefore directly valuable for Melee.
---   * Wing Clip: 25/30/35% weapon damage.
---   * Pet abilities scale from Attack Power:
---       Bite  +1 dmg per 20 AP
---       Claw  +1 dmg per 42 AP
+-- Ranged vs melee weapon stats:
+--   The parser routes ranged weapons' DPS / per-hit
+--   damage / swing speed into the RANGED-* stats, so
+--   the two categories can be weighted independently.
+--
+--   * Ranged specs (BM / MM / Survival): the ranged
+--     weapon is the main damage source, so RANGED DPS
+--     carries full weight.  The melee weapon contributes
+--     only stat bonuses; its DPS / damage / speed sit at
+--     0.05 so two melee weapons with equal stats can
+--     still be ranked, but stats always dominate.
+--   * Melee spec: the melee weapon is the main damage
+--     source (Aspect of the Wolf), so melee DPS / damage
+--     / speed carry full weight there.
+--
+-- Turtle-specific mechanics (Melee only):
+--   * Mongoose Bite: 60% weapon damage + flat, resets
+--     auto-attack swing timer.
+--   * Improved Predator Aspects: attack speed proc.
 --   * Endurance Training: 6..30% of Stamina to pet.
 --
--- Hunter weapon proficiencies (per WoW 1.12 / Turtle):
+-- Hunter weapon proficiencies:
 --   * Usable: Axes (1H/2H), Swords (1H/2H), Daggers,
 --     Fist Weapons, Polearms, Staves,
 --     Bows, Guns, Crossbows, Thrown.
 --   * NOT usable: Maces (1H/2H), Wands, Shields,
---     Holdables, Off-hand weapons (no Dual Wield).
---
--- notUsable.byEquipLoc keys are INVTYPE_* TOKEN strings.
--- notUsable.byClassSubclass keys are numeric classID/subclassID.
+--     Holdables, Off-hand weapons.
 -------------------------------------------------
 ZaiiaPawnPresets = ZaiiaPawnPresets or {}
 ZaiiaPawnPresets["HUNTER"] = {
@@ -44,7 +47,17 @@ ZaiiaPawnPresets["HUNTER"] = {
             ["RANGED HASTE"]         = 1.9,
             ["CRIT"]                 = 1.7,
             ["HIT"]                  = 2.1,
-            ["DPS"]                  = 1.25,
+
+            -- Ranged weapon (main damage source)
+            ["RANGED DPS"]           = 1.3,
+            ["RANGED WEAPON DAMAGE"] = 0.05,
+            ["RANGED WEAPON SPEED"]  = 0,
+
+            -- Melee weapon (stats only, tiny DPS tiebreak)
+            ["DPS"]                  = 0.05,
+            ["WEAPON DAMAGE"]        = 0.05,
+            ["WEAPON SPEED"]         = 0,
+
             ["HASTE"]                = 1.5,
             ["BOWS"]                 = 0.55,
             ["GUNS"]                 = 0.55,
@@ -59,10 +72,8 @@ ZaiiaPawnPresets["HUNTER"] = {
             ["LIFESTEAL"]            = 1.0,
             ["FORTUNE"]              = 0.8,
             ["MOVEMENT SPEED"]       = 0.2,
-            ["WEAPON TYPE 2H"]       = 20,
+            ["WEAPON TYPE 2H"]       = 10,
             ["WEAPON TYPE 1H"]       = 5,
-            ["WEAPON DAMAGE"]        = 0.4,
-            ["WEAPON SPEED"]         = -3,
         },
         notUsable = {
             byEquipLoc = {
@@ -70,11 +81,9 @@ ZaiiaPawnPresets["HUNTER"] = {
                 ["INVTYPE_WEAPONOFFHAND"] = true,
             },
             byClassSubclass = {
-                [4] = { [6] = true },                       -- Shield
+                [4] = { [6] = true },
                 [2] = {
-                    [17] = true,   -- Wand
-                    [4]  = true,   -- 1H Mace
-                    [5]  = true,   -- 2H Mace
+                    [17] = true, [4] = true, [5] = true,
                 },
             },
         },
@@ -94,7 +103,15 @@ ZaiiaPawnPresets["HUNTER"] = {
             ["RANGED HASTE"]         = 2.1,
             ["CRIT"]                 = 1.9,
             ["HIT"]                  = 2.25,
-            ["DPS"]                  = 1.35,
+
+            ["RANGED DPS"]           = 1.4,
+            ["RANGED WEAPON DAMAGE"] = 0.05,
+            ["RANGED WEAPON SPEED"]  = 0,
+
+            ["DPS"]                  = 0.05,
+            ["WEAPON DAMAGE"]        = 0.05,
+            ["WEAPON SPEED"]         = 0,
+
             ["ARMOR PENETRATION"]    = 0.9,
             ["BOWS"]                 = 0.6,
             ["GUNS"]                 = 0.6,
@@ -106,10 +123,8 @@ ZaiiaPawnPresets["HUNTER"] = {
             ["LIFESTEAL"]            = 0.8,
             ["FORTUNE"]              = 0.8,
             ["MOVEMENT SPEED"]       = 0.2,
-            ["WEAPON TYPE 2H"]       = 20,
+            ["WEAPON TYPE 2H"]       = 10,
             ["WEAPON TYPE 1H"]       = 5,
-            ["WEAPON DAMAGE"]        = 0.4,
-            ["WEAPON SPEED"]         = -3,
         },
         notUsable = {
             byEquipLoc = {
@@ -137,7 +152,15 @@ ZaiiaPawnPresets["HUNTER"] = {
             ["RANGED HASTE"]         = 1.8,
             ["CRIT"]                 = 1.8,
             ["HIT"]                  = 2.0,
-            ["DPS"]                  = 1.2,
+
+            ["RANGED DPS"]           = 1.3,
+            ["RANGED WEAPON DAMAGE"] = 0.05,
+            ["RANGED WEAPON SPEED"]  = 0,
+
+            ["DPS"]                  = 0.05,
+            ["WEAPON DAMAGE"]        = 0.05,
+            ["WEAPON SPEED"]         = 0,
+
             ["HASTE"]                = 1.7,
             ["LIFESTEAL"]            = 1.2,
             ["BOWS"]                 = 0.5,
@@ -150,10 +173,8 @@ ZaiiaPawnPresets["HUNTER"] = {
             ["STAVES"]               = 0.1,
             ["FORTUNE"]              = 0.8,
             ["MOVEMENT SPEED"]       = 0.2,
-            ["WEAPON TYPE 2H"]       = 20,
+            ["WEAPON TYPE 2H"]       = 10,
             ["WEAPON TYPE 1H"]       = 5,
-            ["WEAPON DAMAGE"]        = 0.4,
-            ["WEAPON SPEED"]         = -3,
         },
         notUsable = {
             byEquipLoc = {
@@ -168,32 +189,45 @@ ZaiiaPawnPresets["HUNTER"] = {
     },
 
     -------------------------------------------------
-    -- Melee (Turtle WoW: Aspect of the Wolf build)
+    -- Melee (Aspect of the Wolf)
     -------------------------------------------------
     {
         name = "Melee [ZaiiaPawn]",
         weights = {
-            ["STRENGTH"]             = 0.5,
-            ["AGILITY"]              = 1.4,
-            ["STAMINA"]              = 0.8,
-            ["ATTACK POWER"]         = 1.1,
-            ["HIT"]                  = 2.2,
-            ["CRIT"]                 = 2.0,
-            ["HASTE"]                = 1.5,
+            ["STRENGTH"]             = 1.0,
+            ["AGILITY"]              = 1.0,
+            ["STAMINA"]              = 0.9,
+            ["ATTACK POWER"]         = 1.05,
+            ["HIT"]                  = 2.15,
+            ["CRIT"]                 = 2.1,
+
+            -- Melee weapon carries the build
+            ["DPS"]                  = 1.5,
+            ["WEAPON DAMAGE"]        = 2.0,
+            ["WEAPON SPEED"]         = 15,
+
+            -- Ranged weapon is unused
+            ["RANGED DPS"]           = 0,
+            ["RANGED WEAPON DAMAGE"] = 0,
+            ["RANGED WEAPON SPEED"]  = 0,
+
+            ["HASTE"]                = 1.8,
             ["ARMOR"]                = 0.02,
             ["DODGE"]                = 1.5,
-            ["LIFESTEAL"]            = 1.5,
-            ["FORTUNE"]              = 0.8,
+            ["DEFENSE"]              = 1.2,
+            ["LIFESTEAL"]            = 1.6,
+            ["FORTUNE"]              = 1.0,
+            ["AVOIDANCE"]            = 0.5,
+            ["HEALTH PER 5"]         = 0.4,
             ["AXES"]                 = 0.5,
             ["SWORDS"]               = 0.5,
-            ["DAGGERS"]              = 0.3,
-            ["FIST WEAPONS"]         = 0.3,
-            ["POLEARMS"]             = 0.4,
-            ["STAVES"]               = 0.3,
-            ["WEAPON DAMAGE"]        = 1.0,
-            ["WEAPON SPEED"]         = 10,
-            ["WEAPON TYPE 2H"]       = 80,
-            ["WEAPON TYPE 1H"]       = -20,
+            ["DAGGERS"]              = 0.25,
+            ["FIST WEAPONS"]         = 0.25,
+            ["POLEARMS"]             = 0.3,
+            ["STAVES"]               = 0.2,
+            ["MOVEMENT SPEED"]       = 0.3,
+            ["WEAPON TYPE 2H"]       = 20,
+            ["WEAPON TYPE 1H"]       = 5,
         },
         notUsable = {
             byEquipLoc = {
@@ -222,7 +256,15 @@ ZaiiaPawnPresets["HUNTER"] = {
             ["RANGED HASTE"]         = 1.6,
             ["CRIT"]                 = 1.6,
             ["HIT"]                  = 1.7,
-            ["DPS"]                  = 1.3,
+
+            ["RANGED DPS"]           = 1.3,
+            ["RANGED WEAPON DAMAGE"] = 0.05,
+            ["RANGED WEAPON SPEED"]  = 0,
+
+            ["DPS"]                  = 0.05,
+            ["WEAPON DAMAGE"]        = 0.05,
+            ["WEAPON SPEED"]         = 0,
+
             ["HASTE"]                = 1.5,
             ["LIFESTEAL"]            = 1.5,
             ["FORTUNE"]              = 0.7,
@@ -237,10 +279,8 @@ ZaiiaPawnPresets["HUNTER"] = {
             ["STAVES"]               = 0.15,
             ["MOVEMENT SPEED"]       = 0.4,
             ["MOUNT SPEED"]          = 0.3,
-            ["WEAPON TYPE 2H"]       = 60,
-            ["WEAPON TYPE 1H"]       = -10,
-            ["WEAPON DAMAGE"]        = 1.0,
-            ["WEAPON SPEED"]         = 5,
+            ["WEAPON TYPE 2H"]       = 10,
+            ["WEAPON TYPE 1H"]       = 5,
         },
         notUsable = {
             byEquipLoc = {
