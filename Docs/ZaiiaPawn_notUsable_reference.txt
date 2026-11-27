@@ -1,0 +1,368 @@
+========================================================
+ ЧАСТЬ 1 / PART 1 - РУССКИЙ
+========================================================
+
+========================================================
+ ZAIIAPAWN - СПРАВОЧНИК ФИЛЬТРА NOTUSABLE
+========================================================
+ Руководство для Turtle WoW 1.18.1 (ClassicAPI желателен).
+========================================================
+
+--------------------------------------------------------
+1. НАЗНАЧЕНИЕ
+--------------------------------------------------------
+
+notUsable - фильтр конкретного набора весов.  Перечисляет
+типы предметов, ФИЗИЧЕСКИ НЕДОСТУПНЫЕ билду.  Предмет,
+чей тип совпадает с фильтром, полностью игнорируется:
+score, сравнение и строка в тултипе пропускаются.
+
+Жёсткий запрет - только для физической невозможности
+(разбойник не может носить двуручное).  Мягкие
+предпочтения (Ret: 2H лучше 1H) - это веса, не фильтр.
+
+--------------------------------------------------------
+2. ФОРМАТ
+--------------------------------------------------------
+
+Три независимых подтаблицы:
+
+  byEquipLoc      -> { ["INVTYPE_X"] = true }
+                     по слоту, для любого класса.
+  byClassEquipLoc -> { [classID] = { ["INVTYPE_X"] = true } }
+                     один слот для одного класса.
+  byClassSubclass -> { [classID] = { [subclassID] = true } }
+                     точная блокировка по подклассу
+                     (разделяет щит и офф-хенд, лук и wand).
+
+Устаревший "плоский" формат { ["INVTYPE_X"] = true }
+эквивалентен byEquipLoc.
+
+--------------------------------------------------------
+3. УСТОЙЧИВОСТЬ К ЛОКАЛИ
+--------------------------------------------------------
+
+Ключи - английские литералы INVTYPE_* и числовые ID из
+ItemClass.dbc / ItemSubClass.dbc.  Отображаемые строки
+("Two-Hand", "Одноручное") использовать нельзя: они
+меняются по локали, и фильтр молча перестаёт работать.
+
+--------------------------------------------------------
+4. ПРИМЕНЕНИЕ
+--------------------------------------------------------
+
+Фильтр проверяется в Scoring/Engine.lua
+(ZaiiaPawn.IsEquipLocBlocked) и вызывается из:
+
+  Tooltip/MultiSpec.lua               - пропуск сета
+  Tooltip/Compare.lua                 - пропуск надетого
+  Scoring/Engine.lua                  - пропуск слотов
+                                        в общем score
+
+--------------------------------------------------------
+5. ТОКЕНЫ EQUIPLOC
+--------------------------------------------------------
+
+  INVTYPE_2HWEAPON         Двуручное (посох, древковое)
+  INVTYPE_WEAPON           1H, любая рука
+  INVTYPE_WEAPONMAINHAND   1H, только правая
+  INVTYPE_WEAPONOFFHAND    1H, только левая
+  INVTYPE_SHIELD           Щит (слот "Off Hand")
+  INVTYPE_HOLDABLE         Holdable (орб, книга, тотем...)
+  INVTYPE_RANGED           Лук / ружьё / арбалет
+  INVTYPE_RANGEDRIGHT      Wand
+  INVTYPE_THROWN           Метательное
+  INVTYPE_RELIC            Libram / Idol / Totem
+
+INVTYPE_SHIELD и INVTYPE_WEAPONOFFHAND имеют одинаковую
+отображаемую строку, но разные токены.  Разделяйте через
+byClassSubclass, если нужно.
+
+--------------------------------------------------------
+6. ЧИСЛОВЫЕ ID
+--------------------------------------------------------
+
+Класс: 2 = Weapon, 4 = Armor.
+
+Оружие: 0=1H Axe, 1=2H Axe, 2=Bow, 3=Gun, 4=1H Mace,
+  5=2H Mace, 6=Polearm, 7=1H Sword, 8=2H Sword,
+  10=Staff, 11=Fist, 13=Dagger, 14=Thrown, 16=Crossbow,
+  17=Wand.
+
+Броня: 1=Cloth, 2=Leather, 3=Mail, 4=Plate, 6=Shield,
+  7=Libram, 8=Idol, 9=Totem.
+
+--------------------------------------------------------
+7. ВЛАДЕНИЯ ПО КЛАССАМ (Turtle 1.18.1)
+--------------------------------------------------------
+
+ПАЛАДИН
+  1H/2H топор, 1H/2H булава, 1H/2H меч, древковое,
+  щит, holdable, либрам.
+  НЕ может: кинжал, кистень, лук/ружьё/арбалет,
+  метательное, wand, ПОСОХ, идол, тотем, офф-хенд.
+  Protection: запрет 2H, Holdable, Ranged, Wand,
+  Thrown, Off-hand.  Остальные спеки: запрет Ranged,
+  Wand, Thrown, Off-hand, Staff, Idol, Totem,
+  Dagger, Fist.
+
+ВОИН
+  Arms / Fury: запрет щита и wand.
+  Protection: запрет 2H, Off-hand, wand.
+  Лук/ружьё/метательное разрешены всем.
+
+ОХОТНИК
+  1H/2H топор, 1H/2H меч, древковое, посох, кинжал,
+  кистень, лук/ружьё/арбалет/метательное.
+  НЕ может: булаву, wand, щит, holdable.
+
+РАЗБОЙНИК
+  Кинжал, 1H меч/булава/топор/кистень, ranged.
+  НЕ может: любое 2H, щит, holdable, wand.
+
+ЖРЕЦ / МАГ / ЧЕРНОКНИЖНИК
+  Ткань.  1H меч, кинжал, посох, wand (жрец: 1H булава).
+  НЕ может: топоры, булавы (кроме 1H у жреца),
+  2H меч, древковое, кистень, ranged, щит, кожу,
+  кольчугу, латы.
+
+ШАМАН
+  1H/2H топор, 1H/2H булава, посох, кинжал, кистень.
+  НЕ может: мечи, древковое, лук/ружьё/арбалет, wand,
+  метательное.
+  Enhancement дополнительно не может щит (dual-wield).
+  Tank-Enhancement не может 2H, Off-hand, ranged.
+
+ДРУИД
+  Ткань/кожа.  Булава (1H/2H), кинжал, кистень, посох,
+  древковое - всё как статстики.
+  НЕ может: топоры, мечи, ranged, wand, щит,
+  кольчугу, латы.
+
+--------------------------------------------------------
+8. ЧАСТЫЕ ОШИБКИ
+--------------------------------------------------------
+
+ОШИБКА: блокировать 1H в Ret Paladin.
+  Паладин МОЖЕТ носить 1H (низкий уровень часто 1H+щит).
+  Используйте вес WEAPON TYPE 1H = -30.
+
+ОШИБКА: блокировать Ranged в Melee Hunter.
+  Охотник использует Ranged для пулинга и Auto Shot.
+
+ОШИБКА: блокировать Holdable для Feral Druid.
+  Holdable - статстик, доступен друиду.
+
+ОШИБКА: блокировать 2H для Elemental Shaman.
+  Посох - это 2H.  Разделяйте через byClassSubclass
+  (посох = подкласс 10) или используйте вес.
+
+ПРАВИЛЬНО: блокировать щит для разбойника
+  (физически невозможно).
+
+ПРАВИЛЬНО: блокировать посох для паладина
+  (владения посохом нет, хотя 2H меч/топор/булава/
+  древковое разрешены).
+
+ПРАВИЛЬНО: блокировать 2H для Prot Paladin
+  (танк без щита невозможен).
+
+--------------------------------------------------------
+9. ОСОБЕННОСТИ TURTLE 1.18.1
+--------------------------------------------------------
+
+- Охотники: melee Survival реален.
+- Паладины: усилено скалирование от SP/AP
+  (Consecration 0.08, Judgement 0.728, Crusader 0.33 SP,
+  Holy Strike 0.43 SP).  Consecration с 20 уровня.
+- Enhancement Shaman: dual-wield доступен.
+- Titan's Grip НЕТ (Warrior не dual-wield 2H).
+- Paladin / Druid / Priest / Mage / Warlock: без dual-wield.
+- Паладины: посохи недоступны.
+
+========================================================
+ КОНЕЦ РУССКОЙ ЧАСТИ
+========================================================
+
+
+========================================================
+ ЧАСТЬ 2 / PART 2 - ENGLISH
+========================================================
+
+========================================================
+ ZAIIAPAWN - NOTUSABLE FILTER REFERENCE
+========================================================
+ A guide for Turtle WoW 1.18.1 (ClassicAPI recommended).
+========================================================
+
+--------------------------------------------------------
+1. PURPOSE
+--------------------------------------------------------
+
+notUsable is a per-set filter listing item types that are
+PHYSICALLY UNUSABLE by this build.  An item whose type
+matches is fully skipped: no score, no comparison, no
+tooltip line.
+
+Hard blocks are for physical impossibility only (Rogue
+cannot equip a two-hander).  Soft preferences (Ret: 2H
+better than 1H) belong in weights, not in the filter.
+
+--------------------------------------------------------
+2. FORMAT
+--------------------------------------------------------
+
+Three independent subtables:
+
+  byEquipLoc      -> { ["INVTYPE_X"] = true }
+                     blocks by slot for any class.
+  byClassEquipLoc -> { [classID] = { ["INVTYPE_X"] = true } }
+                     blocks one slot for one class.
+  byClassSubclass -> { [classID] = { [subclassID] = true } }
+                     exact subclass match (separates
+                     shield vs off-hand, bow vs wand).
+
+Legacy flat form { ["INVTYPE_X"] = true } equals
+byEquipLoc.
+
+--------------------------------------------------------
+3. LOCALE INDEPENDENCE
+--------------------------------------------------------
+
+Keys are English INVTYPE_* literals and numeric IDs from
+ItemClass.dbc / ItemSubClass.dbc.  Do not use display
+strings ("Two-Hand"): they change per locale and the
+filter silently fails.
+
+--------------------------------------------------------
+4. APPLICATION
+--------------------------------------------------------
+
+The filter is checked in Scoring/Engine.lua
+(ZaiiaPawn.IsEquipLocBlocked), called from:
+
+  Tooltip/MultiSpec.lua               - skip the set
+  Tooltip/Compare.lua                 - skip equipped
+  Scoring/Engine.lua                  - skip slots in
+                                        total score
+
+--------------------------------------------------------
+5. EQUIPLOC TOKENS
+--------------------------------------------------------
+
+  INVTYPE_2HWEAPON        Two-Hand (also staff, polearm)
+  INVTYPE_WEAPON          1H, either hand
+  INVTYPE_WEAPONMAINHAND  1H, main hand only
+  INVTYPE_WEAPONOFFHAND   1H, off hand only
+  INVTYPE_SHIELD          Shield (display "Off Hand")
+  INVTYPE_HOLDABLE        Holdable (orb, tome, totem...)
+  INVTYPE_RANGED          Bow / gun / crossbow
+  INVTYPE_RANGEDRIGHT     Wand
+  INVTYPE_THROWN          Thrown
+  INVTYPE_RELIC           Libram / Idol / Totem
+
+INVTYPE_SHIELD and INVTYPE_WEAPONOFFHAND share the same
+display string but have distinct tokens.  Use
+byClassSubclass when you need to separate them.
+
+--------------------------------------------------------
+6. NUMERIC IDS
+--------------------------------------------------------
+
+Class: 2 = Weapon, 4 = Armor.
+
+Weapon: 0=1H Axe, 1=2H Axe, 2=Bow, 3=Gun, 4=1H Mace,
+  5=2H Mace, 6=Polearm, 7=1H Sword, 8=2H Sword,
+  10=Staff, 11=Fist, 13=Dagger, 14=Thrown, 16=Crossbow,
+  17=Wand.
+
+Armor: 1=Cloth, 2=Leather, 3=Mail, 4=Plate, 6=Shield,
+  7=Libram, 8=Idol, 9=Totem.
+
+--------------------------------------------------------
+7. CLASS CAPABILITIES (Turtle 1.18.1)
+--------------------------------------------------------
+
+PALADIN
+  1H/2H axe, 1H/2H mace, 1H/2H sword, polearm, shield,
+  holdable, libram.
+  Cannot: dagger, fist, bow/gun/crossbow, thrown, wand,
+  STAFF, idol, totem, off-hand weapon.
+  Protection: block 2H, Holdable, Ranged, Wand, Thrown,
+  Off-hand.  Other specs: block Ranged, Wand, Thrown,
+  Off-hand, Staff, Idol, Totem, Dagger, Fist.
+
+WARRIOR
+  Arms / Fury: block shield, wand.
+  Protection: block 2H, Off-hand, wand.
+  Ranged/thrown allowed for every spec.
+
+HUNTER
+  1H/2H axe, 1H/2H sword, polearm, staff, dagger, fist,
+  bow/gun/crossbow/thrown.
+  Cannot: mace, wand, shield, holdable.
+
+ROGUE
+  Dagger, 1H sword/mace/axe/fist, ranged.
+  Cannot: any 2H, shield, holdable, wand.
+
+PRIEST / MAGE / WARLOCK
+  Cloth.  1H sword, dagger, staff, wand (priest: 1H mace).
+  Cannot: axes, maces (except 1H for priest), 2H sword,
+  polearm, fist, ranged, shield, leather, mail, plate.
+
+SHAMAN
+  1H/2H axe, 1H/2H mace, staff, dagger, fist.
+  Cannot: swords, polearm, bow/gun/crossbow, wand,
+  thrown.
+  Enhancement: also cannot shield (dual-wield).
+  Tank-Enhancement: cannot 2H, off-hand, ranged.
+
+DRUID
+  Cloth/leather.  Mace (1H/2H), dagger, fist, staff,
+  polearm - all as statsticks.
+  Cannot: axes, swords, ranged, wand, shield, mail,
+  plate.
+
+--------------------------------------------------------
+8. COMMON MISTAKES
+--------------------------------------------------------
+
+MISTAKE: blocking 1H in Ret Paladin.
+  Paladin CAN equip 1H (low level often 1H + shield).
+  Use weight WEAPON TYPE 1H = -30.
+
+MISTAKE: blocking Ranged in Melee Hunter.
+  Hunter uses Ranged for pulling and Auto Shot.
+
+MISTAKE: blocking Holdable for Feral Druid.
+  Holdable is a statstick, druid can equip it.
+
+MISTAKE: blocking all 2H for Elemental Shaman.
+  Staff is 2H.  Separate staff (subclass 10) via
+  byClassSubclass, or use a weight.
+
+CORRECT: block shield for Rogue (physically impossible).
+
+CORRECT: block staff for Paladin (no staff skill, though
+  2H sword/axe/mace/polearm are allowed).
+
+CORRECT: block 2H for Protection Paladin (tank without
+  shield is not viable).
+
+--------------------------------------------------------
+9. TURTLE 1.18.1 NOTES
+--------------------------------------------------------
+
+- Hunter melee Survival is a real spec.
+- Paladin spell scaling buffed (Consecration 0.08 per
+  SP/AP, Judgement 0.728, Crusader 0.33 SP, Holy Strike
+  0.43 SP).  Consecration at level 20.
+- Enhancement Shaman can dual-wield.
+- No Titan's Grip (Warrior cannot dual-wield 2H).
+- Paladin / Druid / Priest / Mage / Warlock: no dual-wield.
+- Paladins: staff not available.
+
+========================================================
+ END OF FILE
+========================================================
