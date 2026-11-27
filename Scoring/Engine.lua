@@ -171,6 +171,41 @@ function ZaiiaPawn.GetScanTooltip()
     return scanTooltip
 end
 
+-------------------------------------------------
+-- True if the item is an equippable piece of gear.
+-- Quest items, consumables, reagents and other non-gear
+-- items return an empty INVTYPE_* string (or nil).
+-------------------------------------------------
+function ZaiiaPawn.IsItemEquippable(link)
+    if not link then return false end
+    local _, _, idStr = string.find(link, "item:(%d+)")
+    if not idStr then return false end
+    local id = tonumber(idStr)
+    if not id then return false end
+
+    local equipLoc
+    if type(C_Item) == "table" and C_Item.GetItemInfo then
+        local t = { C_Item.GetItemInfo(id) }
+        equipLoc = t[9]
+    end
+    if not equipLoc then
+        local t = { GetItemInfo(id) }
+        local i
+        for i = 1, table.getn(t) do
+            local v = t[i]
+            if type(v) == "string" and string.find(v, "^INVTYPE_") then
+                equipLoc = v
+                break
+            end
+        end
+    end
+
+    if not equipLoc or equipLoc == "" or equipLoc == "INVTYPE_NON_EQUIP" then
+        return false
+    end
+    return true
+end
+
 local ef = CreateFrame("Frame")
 ef:RegisterEvent("UNIT_INVENTORY_CHANGED")
 ef:SetScript("OnEvent", function()

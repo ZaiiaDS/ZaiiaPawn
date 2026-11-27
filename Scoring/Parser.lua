@@ -472,5 +472,18 @@ function ZaiiaPawn.ParseTooltip(tooltip)
 
     DetectWeaponType(tooltip, totals)
 
+    -- Ranged weapons: route weapon DPS / damage / speed into
+    -- separate RANGED-* stats.  This lets ranged specs weight
+    -- bow/gun DPS independently from melee weapon DPS, since
+    -- the two serve completely different purposes for hunters.
+    if totals["WEAPON TYPE RANGED"] == 1 then
+        totals["RANGED WEAPON DAMAGE"] = totals["WEAPON DAMAGE"]
+        totals["RANGED WEAPON SPEED"]  = totals["WEAPON SPEED"]
+        totals["RANGED DPS"]           = totals["DPS"]
+        totals["WEAPON DAMAGE"] = nil
+        totals["WEAPON SPEED"]  = nil
+        totals["DPS"]           = nil
+    end
+
     return totals
 end
