@@ -48,6 +48,8 @@ local STAT_GROUP_ORDER = {
     ["MOVEMENT SPEED"] = 10, ["MOUNT SPEED"] = 10,
     ["ATTACK POWER UNDEAD"] = 11, ["SPELL DAMAGE UNDEAD"] = 11,
     ["WEAPON DAMAGE"] = 12, ["WEAPON SPEED"] = 12, DPS = 12,
+    ["RANGED WEAPON DAMAGE"] = 12, ["RANGED WEAPON SPEED"] = 12,
+    ["RANGED DPS"] = 12,
     PROCS = 13, ["PROC DAMAGE"] = 13, ["PROC AOE"] = 13, ["PROC HEAL"] = 13,
     SWORDS = 14, AXES = 14, MACES = 14, DAGGERS = 14,
     ["FIST WEAPONS"] = 14, POLEARMS = 14, STAVES = 14,
@@ -68,7 +70,7 @@ local STAT_GROUP_HEADERS = {
     [9]  = "Special Effects",
     [10] = "Movement",
     [11] = "vs Undead",
-    [12] = "Weapon Stats",
+    [12] = "Weapon Stats (Melee / Ranged)",
     [13] = "Procs",
     [14] = "Weapon Proficiency",
     [15] = "Weapon Type Preference",
@@ -88,9 +90,12 @@ local function EstimateWrappedHeight(text, charsPerLine, lineHeight)
 end
 
 local WEIGHT_HINTS = {
-    ["WEAPON DAMAGE"]       = "per-hit damage (5..200); 2..5 is typical.",
-    ["WEAPON SPEED"]        = "swing seconds (1.3..4.0); ~30..50x of WEAPON DAMAGE balances.",
-    ["DPS"]                 = "tooltip DPS (0..100); melee 1..2, casters 0.",
+    ["WEAPON DAMAGE"]       = "melee per-hit damage (5..200); 2..5 is typical.",
+    ["WEAPON SPEED"]        = "melee swing seconds (1.3..4.0); negative favours fast weapons.",
+    ["DPS"]                 = "melee tooltip DPS (0..100); melee 1..2, ranged specs 0.05.",
+    ["RANGED WEAPON DAMAGE"] = "bow/gun per-hit damage; small for hunters, 0.1..0.5.",
+    ["RANGED WEAPON SPEED"]  = "bow/gun swing seconds; 0 by default, negative favours fast.",
+    ["RANGED DPS"]           = "bow/gun tooltip DPS (0..60); ranged specs 1.0..1.5.",
     ["WEAPON TYPE 1H"]      = "matches 1H axes, swords, maces, daggers, fist weapons.",
     ["WEAPON TYPE 2H"]      = "matches 2H axes, swords, maces, polearms, staves.",
     ["WEAPON TYPE SHIELD"]  = "matches shields.",
@@ -750,9 +755,12 @@ function BuildEditBoxes()
             end
         end
     end
-    allStats["WEAPON DAMAGE"]       = true
-    allStats["WEAPON SPEED"]        = true
-    allStats["WEAPON TYPE 1H"]      = true
+    allStats["WEAPON DAMAGE"]        = true
+    allStats["WEAPON SPEED"]         = true
+    allStats["RANGED WEAPON DAMAGE"] = true
+    allStats["RANGED WEAPON SPEED"]  = true
+    allStats["RANGED DPS"]           = true
+    allStats["WEAPON TYPE 1H"]       = true
     allStats["WEAPON TYPE 2H"]      = true
     allStats["WEAPON TYPE SHIELD"]  = true
     allStats["WEAPON TYPE OFFHAND"] = true
