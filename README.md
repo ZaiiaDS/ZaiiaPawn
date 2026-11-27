@@ -1,8 +1,8 @@
 # ZaiiaPawn
 
-Оценка (скоринг) предметов по нескольким наборам весов для Turtle-like серверов.
+**Версия 2.8.8** — оценка (скоринг) предметов по нескольким наборам весов для Turtle-like серверов.
 
-ZaiiaPawn оценивает предметы по вашим собственным наборам весов и показывает результат в тултипах предметов. Встроенный модуль рекомендаций подбирает лучшую экипировку по слотам из встроенной базы предметов.
+ZaiiaPawn оценивает предметы по вашим собственным наборам весов и показывает результат в тултипах предметов. Встроенный **модуль рекомендаций** подбирает лучшую экипировку по слотам из встроенной базы предметов и показывает источники каждого предмета.
 
 Основан на OctoPawn: от оригинала взяты классовые пресеты и формат фильтров экипировки, остальной код переписан.
 
@@ -17,7 +17,28 @@ ZaiiaPawn оценивает предметы по вашим собственн
 - **Импорт/экспорт Pawn v1.** Обмен наборами весов через стандартный формат строк Pawn (совместим с WoWhead).
 - **Полный бэкап профиля.** Экспорт всех сетов (веса + фильтры экипировки) одной переносимой строкой; импорт на другом персонаже того же класса.
 - **Предпочтения по типу оружия.** Мягкий вклад в скор для 1H, 2H, Shield, Off-hand, Ranged — независимо от жёстких фильтров экипировки.
-- **Рекомендатор экипировки (`/zp rec`).** Лучшие доступные предметы по каждому слоту из встроенной базы: учитываются уровень персонажа, требования источников предмета, тип брони и сет-бонусы. Слот реликвий называется по классу: Libram (Paladin), Idol (Druid), Totem (Shaman).
+
+## Модуль рекомендаций экипировки
+
+Отдельный модуль для подбора лучшей экипировки по каждому слоту из встроенной базы предметов.
+
+**Команда:** `/zp rec`
+
+### Что делает
+
+- Показывает лучшие доступные предметы по каждому слоту, отсортированные по скору активного сета.
+- **Показывает источники экипировки** — при наведении на предмет отображается, где его получить: квест, дроп с моба/босса, вендор и т.д.
+- Учитывает уровень персонажа, требования источников предмета, тип брони и сет-бонусы.
+- Слот реликвий называется по классу: Libram (Paladin), Idol (Druid), Totem (Shaman).
+
+### Интерфейс
+
+- Вкладки слотов в два ряда: клик по вкладке — список лучших предметов для этого слота.
+- Чекбоксы типов брони сверху (Cloth / Leather / Mail / Plate — по классу); состояние запоминается для каждого персонажа.
+- Метка `[Equipped]` — предмет сейчас надет; скор справа; сет-бонус отображается как `+X.X set`.
+- Наведение на строку — тултип предмета со списком источников.
+- Shift+клик по строке — вставить ссылку предмета в активное поле ввода (например, в чат).
+- `Recalc` — принудительно пересобрать рекомендации.
 
 ## Управление
 
@@ -29,15 +50,6 @@ ZaiiaPawn оценивает предметы по вашим собственн
 - `^` / `v` — изменить порядок сетов.
 - `Esc` — закрыть окна.
 - Кнопки справа сгруппированы в Set, Global и Options.
-
-### Окно рекомендаций
-
-- Вкладки слотов в два ряда: клик по вкладке — список лучших предметов для этого слота, отсортированный по скору активного сета.
-- Чекбоксы типов брони сверху (Cloth / Leather / Mail / Plate — по классу); состояние запоминается для каждого персонажа.
-- Метка `[Equipped]` — предмет сейчас надет; скор справа; сет-бонус отображается как `+X.X set`.
-- Наведение на строку — тултип предмета со списком источников (квест, дроп, вендор).
-- Shift+клик по строке — вставить ссылку предмета в активное поле ввода (например, в чат).
-- `Recalc` — принудительно пересобрать рекомендации.
 
 ## Установка
 
@@ -59,9 +71,9 @@ ZaiiaPawn оценивает предметы по вашим собственн
 
 # ZaiiaPawn (English)
 
-Multi-set item scoring for Turtle-like servers.
+**Version 2.8.8** — multi-set item scoring for Turtle-like servers.
 
-ZaiiaPawn scores items against your own weight sets and shows the result in item tooltips. A built-in recommender module picks the best available gear per slot from an embedded item database.
+ZaiiaPawn scores items against your own weight sets and shows the result in item tooltips. A built-in **recommender module** picks the best available gear per slot from an embedded item database and shows the source of each item.
 
 Based on OctoPawn: class weight presets and the equipment filter format are reused, most of the code is rewritten.
 
@@ -76,7 +88,28 @@ Based on OctoPawn: class weight presets and the equipment filter format are reus
 - **Pawn v1 import / export.** Share or import weight sets using the standard Pawn string format (WoWhead-compatible).
 - **Full profile backup.** Export every set (weights + equipment filters) into one portable string; import it on another character of the same class.
 - **Weapon type preferences.** Score contribution for 1H, 2H, Shield, Off-hand, Ranged — a soft preference, independent from the hard equipment filters.
-- **Gear recommender (`/zp rec`).** Best available items per slot from the embedded database: player level, item source requirements, armour type and set bonuses are all taken into account. The relic slot is named per class: Libram (Paladin), Idol (Druid), Totem (Shaman).
+
+## Gear Recommender Module
+
+A separate module for picking the best available gear per slot from the embedded item database.
+
+**Command:** `/zp rec`
+
+### What it does
+
+- Shows the best available items per slot, sorted by the active set's score.
+- **Shows gear sources** — hover over an item to see where to get it: quest, drop from mob/boss, vendor, etc.
+- Takes into account player level, item source requirements, armour type and set bonuses.
+- The relic slot is named per class: Libram (Paladin), Idol (Druid), Totem (Shaman).
+
+### Interface
+
+- Two rows of slot tabs: click a tab to see the best items for that slot.
+- Armour type checkboxes on top (Cloth / Leather / Mail / Plate — depending on class); the state is remembered per character.
+- `[Equipped]` tag marks the currently worn item; the score is on the right; set bonuses are shown as `+X.X set`.
+- Hover a row — item tooltip plus a list of sources.
+- Shift+click a row — insert the item link into the active edit box (e.g. chat).
+- `Recalc` — force rebuild of the recommendations.
 
 ## Controls
 
@@ -88,15 +121,6 @@ Based on OctoPawn: class weight presets and the equipment filter format are reus
 - `^` / `v` — reorder sets.
 - `Esc` — close windows.
 - Buttons on the right are grouped into Set, Global and Options.
-
-### Recommender window
-
-- Two rows of slot tabs: click a tab to see the best items for that slot, sorted by the active set's score.
-- Armour type checkboxes on top (Cloth / Leather / Mail / Plate — depending on class); the state is remembered per character.
-- `[Equipped]` tag marks the currently worn item; the score is on the right; set bonuses are shown as `+X.X set`.
-- Hover a row — item tooltip plus a list of sources (quest, drop, vendor).
-- Shift+click a row — insert the item link into the active edit box (e.g. chat).
-- `Recalc` — force rebuild of the recommendations.
 
 ## Installation
 
