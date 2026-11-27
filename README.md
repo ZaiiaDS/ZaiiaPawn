@@ -1,6 +1,6 @@
 # ZaiiaPawn
 
-**Версия 2.8.8** — оценка (скоринг) предметов по нескольким наборам весов для Turtle-like серверов.
+Оценка (скоринг) предметов по нескольким наборам весов для Turtle-like серверов.
 
 ZaiiaPawn оценивает предметы по вашим собственным наборам весов и показывает результат в тултипах предметов. Встроенный **модуль рекомендаций** подбирает лучшую экипировку по слотам из встроенной базы предметов и показывает источники каждого предмета.
 
@@ -71,7 +71,7 @@ ZaiiaPawn оценивает предметы по вашим собственн
 
 # ZaiiaPawn (English)
 
-**Version 2.8.8** — multi-set item scoring for Turtle-like servers.
+Multi-set item scoring for Turtle-like servers.
 
 ZaiiaPawn scores items against your own weight sets and shows the result in item tooltips. A built-in **recommender module** picks the best available gear per slot from an embedded item database and shows the source of each item.
 
