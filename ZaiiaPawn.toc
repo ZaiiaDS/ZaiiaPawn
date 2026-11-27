@@ -2,12 +2,12 @@
 ## Title: |cffffd700Z|raiia|cffffd700P|rawn by |cffffd700Zaiia|r
 ## Notes: Multi-set item scoring.
 ## Author: Zaiia (based on OctoPawn by iGreed)
-## Version: 2.7.0
+## Version: 2.8.8
 ## SavedVariablesPerCharacter: ZaiiaPawnDB
 
 # --- Core constants first (CLS_*, WSUB.*, ASUB.*, PAWN_STAT_MAP) ---
-Core\Utils.lua
-Core\ClassRoles.lua
+Utils.lua
+ClassRoles.lua
 
 # --- Defaults helpers ---
 Defaults\OctoPawn_Helpers.lua
@@ -17,7 +17,7 @@ Defaults\ZaiiaPawn_Druid.lua
 Defaults\ZaiiaPawn_Hunter.lua
 Defaults\ZaiiaPawn_Paladin.lua
 
-# --- OctoPawn defaults (need Core\Utils.lua already loaded) ---
+# --- OctoPawn defaults (need Utils.lua already loaded) ---
 Defaults\OctoPawn_Warrior.lua
 Defaults\OctoPawn_Paladin.lua
 Defaults\OctoPawn_Hunter.lua
@@ -29,8 +29,8 @@ Defaults\OctoPawn_Warlock.lua
 Defaults\OctoPawn_Druid.lua
 
 # --- Core (rest) ---
-Core\Sets.lua
-Core\Init.lua
+Sets.lua
+Init.lua
 
 # --- Scoring ---
 Scoring\Parser.lua
@@ -41,6 +41,14 @@ Scoring\Engine.lua
 Tooltip\Compare.lua
 Tooltip\MultiSpec.lua
 Tooltip\Handler.lua
+
+# --- Recommender (data first, logic second) ---
+Recommender\RecommenderData.lua
+Recommender\RecommenderEffects.lua
+Recommender\RecommenderSetBonus.lua
+Recommender\RecommenderSources.lua
+Recommender\RecommenderByClass.lua
+Recommender\Recommender.lua
 
 # --- UI ---
 UI\Config.lua
